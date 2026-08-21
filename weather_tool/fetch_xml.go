@@ -29,11 +29,11 @@ func fetchAndRead(url string) ([]byte, error) {
 	return bytes, nil
 }
 
-func FetchXML(choice int) {
+func FetchXML(choice string) {
 	var location string
 
 	switch choice {
-	case 1:
+	case "National":
 		bytes, err := fetchAndRead("https://www.met.ie/Open_Data/xml/xNational.xml")
 		if err != nil {
 			fmt.Println("failed to fetch national forecast:", err)
@@ -47,7 +47,7 @@ func FetchXML(choice int) {
 		}
 		fmt.Printf("%+v\n", data)
 
-	case 2:
+	case "Regional":
 		fmt.Print("Enter Province: ")
 		fmt.Scan(&location)
 
@@ -65,7 +65,7 @@ func FetchXML(choice int) {
 		}
 		fmt.Printf("%+v\n", data)
 
-	case 3:
+	case "County":
 		fmt.Print("Enter County: ")
 		fmt.Scan(&location)
 

@@ -2,18 +2,23 @@ package main
 
 import (
 	"fmt"
+	"os"
 
+	"github.com/Callumogr18/Gocast/display"
 	weathertool "github.com/Callumogr18/Gocast/weather_tool"
 )
 
 func main() {
-	var workflow int
+	choice, err := display.RunSelector()
+	if err != nil {
+		fmt.Println("Error running program:", err)
+		os.Exit(1)
+	}
 
-	//fmt.Println("Hello World")
-	fmt.Println("Enter choice\n1. National\n2.Province\n3.County")
-	fmt.Print(">>> ")
+	if choice == "" {
+		fmt.Println("No selection made.")
+		return
+	}
 
-	fmt.Scan(&workflow)
-	weathertool.FetchXML(workflow)
-
+	weathertool.FetchXML(choice)
 }

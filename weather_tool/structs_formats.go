@@ -1,7 +1,6 @@
 package weathertool
 
 import (
-	//"fmt"
 	"encoding/xml"
 )
 

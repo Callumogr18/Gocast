@@ -1,6 +1,9 @@
 package weathertool
 
-import "errors"
+import (
+	"errors"
+	"strconv"
+)
 
 // ErrUnknownLocation is returned when a province or county name does not
 // match any entry in the allowlist (Provinces / Counties).
@@ -17,7 +20,7 @@ type UpstreamError struct {
 
 func (e *UpstreamError) Error() string {
 	if e.StatusCode != 0 {
-		return "weathertool: upstream " + e.URL + ": " + e.Err.Error()
+		return "weathertool: upstream " + e.URL + " (" + strconv.Itoa(e.StatusCode) + "): " + e.Err.Error()
 	}
 	return "weathertool: upstream " + e.URL + ": " + e.Err.Error()
 }

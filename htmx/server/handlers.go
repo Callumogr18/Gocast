@@ -10,8 +10,9 @@ for the GET request made
 	* regionalHandler(w http.ResponseWriter, r *http.Request)
 	* countyHandler(w http.ResponseWriter, r *http.Request)
 
-TO-DO:
-Add a helper function to fetch the weather data and parse the neccessary .html file
+A helper function 'renderTemplate()' parses the path and executes it against data into a buffer
+first, so a template error surfaces as a clean 500 instead of a partial
+body written straight to w
 */
 
 import (

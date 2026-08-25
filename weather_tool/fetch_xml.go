@@ -6,14 +6,18 @@ This file has a legacy function which still serves the CLI in 'FetchXML()',
 this parses the user choice in the UI and reflects the corresponsding options.
 
 Three functions to fetch different data such as national, regional and county:
-	* FetchNational() (NationalData, error)
-	* FetchRegional() (ProvinceData, error)
-	* FetchCounty()   (CountyData, error)
+	* FetchNational(ctx) (NationalData, error)
+	* FetchRegional(ctx, s) (ProvinceData, error)
+	* FetchCounty(ctx, s)   (County, error)
 
-These share a common fetch/parse shape via two helpers:
-	* fetchAndRead(url string) ([]byte, error)
-	* fetchAndParse[T any](url, kind string) (T, error)
-	* fetchLocation[T any](loc, kind string, parse func(string) (string, error)) (T, error)
+These share a common fetch/parse shape via three helpers:
+	* fetchAndRead(ctx, url string) ([]byte, error)
+	* fetchAndParse[T any](ctx, url, kind string) (T, error)
+	* fetchLocation[T any](ctx, loc, kind string, parse func(string) (string, error)) (T, error)
+
+Every fetch takes a context.Context so a caller that goes away (a browser that
+disconnects, a cancelled CLI run) cancels the upstream request instead of
+leaving it in flight.
 */
 
 import (

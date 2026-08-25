@@ -1,2 +1,5 @@
 *docs/agent/
 *.claude/
+
+# Build file 
+*Gocast

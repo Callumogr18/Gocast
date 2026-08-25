@@ -1,5 +1,10 @@
 package weathertool
 
+// TO-DO:
+// =======================
+// FILE NEEDS RE-FACTORING
+// =======================
+
 /*
 fetch_xml.go:
 This file has a legacy function which still serves the CLI in 'FetchXML()',
@@ -52,7 +57,7 @@ func fetchAndRead(url string) ([]byte, error) {
 		return nil, &UpstreamError{URL: url, Err: err}
 	}
 
-	return bytes, nil
+	return cleanString(bytes), nil
 }
 
 // fetchAndParse fetches the XML document at url and unmarshals it into T.

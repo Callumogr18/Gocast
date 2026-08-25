@@ -1,5 +1,7 @@
-<div>
-  <p><strong>Issued:</strong> {{.Issued.Time}}</p>
-  <p><strong>Tomorrow:</strong> {{.Tomorrow}}</p>
-  <p><strong>Pollen:</strong> {{.Pollen}}</p>
+<div class="forecast-card">
+  <p class="forecast-issued"><strong>Issued:</strong> {{.Issued.Time}}</p>
+  <div class="forecast-body">
+    <p><strong>Tomorrow:</strong> {{.Tomorrow}}</p>
+    <p><strong>Pollen:</strong> {{.Pollen}}</p>
+  </div>
 </div>

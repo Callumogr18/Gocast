@@ -26,86 +26,37 @@ leaving it in flight.
 */
 
 import (
-	"encoding/xml"
 	"fmt"
-	"io"
 	"net/http"
 	"strings"
 	"time"
+
+	weathertool "github.com/Callumogr18/Gocast/weather_tool"
 )
 
 const xmlBaseURL = "https://www.met.ie/Open_Data/xml/x%s.xml"
 const countyForecastURL = "https://www.met.ie/Open_Data/xml/county_forecast.xml"
+const warningURL = "https://www.met.ie/Open_Data/json/warning_IRELAND.json"
 
 var httpClient = &http.Client{Timeout: 10 * time.Second}
 
-// fetchAndRead performs an HTTP GET request and returns the response body as bytes.
-// It handles error checking and body closing automatically.
-func fetchAndRead(url string) ([]byte, error) {
-	resp, err := httpClient.Get(url)
-	if err != nil {
-		return nil, &UpstreamError{URL: url, Err: err}
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return nil, &UpstreamError{URL: url, StatusCode: resp.StatusCode, Err: fmt.Errorf("unexpected status %s", resp.Status)}
-	}
-
-	bytes, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, &UpstreamError{URL: url, Err: err}
-	}
-
-	return cleanString(bytes), nil
-}
-
-// fetchAndParse fetches the XML document at url and unmarshals it into T.
-// kind names the forecast ("national", "regional", …) for error messages.
-func fetchAndParse[T any](url, kind string) (T, error) {
-	var data T
-
-	body, err := fetchAndRead(url)
-	if err != nil {
-		return data, fmt.Errorf("failed to fetch %s forecast: %w", kind, err)
-	}
-
-	if err := xml.Unmarshal(body, &data); err != nil {
-		return data, fmt.Errorf("failed to parse %s forecast: %w", kind, err)
-	}
-
-	return data, nil
-}
-
-// fetchLocation validates loc with parse, then fetches and parses the
-// matching feed.
-func fetchLocation[T any](loc, kind string, parse func(string) (string, error)) (T, error) {
-	name, err := parse(loc)
-	if err != nil {
-		var zero T
-		return zero, err
-	}
-
-	return fetchAndParse[T](fmt.Sprintf(xmlBaseURL, name), kind)
-}
-
 // FetchNational fetches and parses the national forecast.
-func FetchNational() (NationalData, error) {
-	return fetchAndParse[NationalData](fmt.Sprintf(xmlBaseURL, "National"), "national")
+func FetchNational() (weathertool.NationalData, error) {
+	return fetchAndParse[weathertool.NationalData](fmt.Sprintf(xmlBaseURL, "National"), "national")
 }
 
 // FetchRegional fetches and parses the regional forecast
-func FetchRegional(s string) (ProvinceData, error) {
-	return fetchLocation[ProvinceData](s, "regional", ParseProvince)
+func FetchRegional(s string) (weathertool.ProvinceData, error) {
+	return fetchLocation[weathertool.ProvinceData](s, "regional", weathertool.ParseProvince)
 }
 
 // FetchCounty fetches the all-counties forecast and returns the entry
 // matching s. Matching is case-insensitive since the feed names are
 // UPPERCASE (e.g. "DUBLIN").
-func FetchCounty(s string) (County, error) {
-	doc, err := fetchAndParse[CountyForecast](countyForecastURL, "county")
+func FetchCounty(s string) (weathertool.County, error) {
+	doc, err := fetchAndParse[weathertool.CountyForecast](countyForecastURL, "county")
 	if err != nil {
-		return County{}, err
+		return weathertool.County{}, err
 	}
 
 	s = strings.TrimSpace(s)
@@ -115,7 +66,12 @@ func FetchCounty(s string) (County, error) {
 		}
 	}
 
-	return County{}, fmt.Errorf("%w: %q", ErrUnknownLocation, s)
+	return weathertool.County{}, fmt.Errorf("%w: %q", weathertool.ErrUnknownLocation, s)
+}
+
+// FetchWarning extracts the warning forecast alerts
+func FetchWarning() ([]weathertool.Warning, error) {
+	return fetchAndParseJSON[[]weathertool.Warning](warningURL, "warning")
 }
 
 /*
@@ -159,5 +115,4 @@ func FetchXML(choice string) {
 
 		fmt.Printf("%+v\n", data)
 	}
-
 }

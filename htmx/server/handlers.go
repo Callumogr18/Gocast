@@ -22,6 +22,7 @@ import (
 	"net/http"
 
 	weathertool "github.com/Callumogr18/Gocast/weather_tool"
+	XMLprocessing "github.com/Callumogr18/Gocast/weather_tool/XML-Processing"
 )
 
 // renderTemplate parses path and executes it against data into a buffer
@@ -44,7 +45,7 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func nationalHandler(w http.ResponseWriter, r *http.Request) {
-	data, err := weathertool.FetchNational()
+	data, err := XMLprocessing.FetchNational()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadGateway)
 		return
@@ -56,7 +57,7 @@ func nationalHandler(w http.ResponseWriter, r *http.Request) {
 func regionalHandler(w http.ResponseWriter, r *http.Request) {
 	province := r.URL.Query().Get("province")
 
-	data, err := weathertool.FetchRegional(province)
+	data, err := XMLprocessing.FetchRegional(province)
 	if err != nil {
 		if errors.Is(err, weathertool.ErrUnknownLocation) {
 			http.Error(w, err.Error(), http.StatusBadRequest)
@@ -72,7 +73,7 @@ func regionalHandler(w http.ResponseWriter, r *http.Request) {
 func countyHandler(w http.ResponseWriter, r *http.Request) {
 	county := r.URL.Query().Get("county")
 
-	data, err := weathertool.FetchCounty(county)
+	data, err := XMLprocessing.FetchCounty(county)
 	if err != nil {
 		if errors.Is(err, weathertool.ErrUnknownLocation) {
 			http.Error(w, err.Error(), http.StatusBadRequest)
@@ -83,4 +84,14 @@ func countyHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	renderTemplate(w, "htmx/html/county.html", data)
+}
+
+func warningHandler(w http.ResponseWriter, r *http.Request) {
+	data, err := XMLprocessing.FetchWarning()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadGateway)
+		return
+	}
+
+	renderTemplate(w, "htmx/html/warning.html", data)
 }

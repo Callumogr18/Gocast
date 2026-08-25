@@ -1,0 +1,16 @@
+{{if .}}
+<div class="warning-card warning-active">
+  {{range .}}
+  <div class="warning-item warning-{{.LevelClass}}">
+    <p class="warning-level">{{.Level}} Warning</p>
+    <p class="warning-headline">{{.Headline}}</p>
+    <p class="warning-description">{{.Description}}</p>
+    <p class="warning-valid">Valid: {{.Onset}} – {{.Expiry}}</p>
+  </div>
+  {{end}}
+</div>
+{{else}}
+<div class="warning-card warning-none">
+  <p>No active weather warnings.</p>
+</div>
+{{end}}

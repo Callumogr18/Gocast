@@ -18,6 +18,7 @@ func NewRouter() *http.ServeMux {
 	router.HandleFunc("GET /national", nationalHandler)
 	router.HandleFunc("GET /regional", regionalHandler)
 	router.HandleFunc("GET /county", countyHandler)
+	router.HandleFunc("GET /warning", warningHandler)
 
 	router.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir("htmx/static"))))
 

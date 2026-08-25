@@ -7,6 +7,11 @@ Data formats for the XML data extracted from the URLS
 
 import "strings"
 
+/*
+=========================
+National forecast structs
+=========================
+*/
 type NationalData struct {
 	Issued struct {
 		Time string `xml:"issued,attr"`
@@ -23,6 +28,11 @@ type ProvinceData struct {
 	Pollen   string `xml:"pollen"`
 }
 
+/*
+=======================
+County forecast structs
+=======================
+*/
 type CountyForecast struct {
 	Issued   string   `xml:"issued,attr"`
 	Counties []County `xml:"county"`
@@ -52,4 +62,32 @@ func (d Day) Wind() string {
 // Replaces sun_with_grey_clouds -> sun with grey clouds
 func (d Day) WeatherLabel() string {
 	return strings.ReplaceAll(d.Weather, "_", " ")
+}
+
+/*
+=======================
+Weather Warning structs
+=======================
+*/
+type Warning struct {
+	ID          int      `json:"id"`
+	CapID       string   `json:"capId"`
+	Type        string   `json:"type"`
+	Severity    string   `json:"severity"`
+	Certainty   string   `json:"certainty"`
+	Level       string   `json:"level"`
+	Issued      string   `json:"issued"`
+	Updated     string   `json:"updated"`
+	Onset       string   `json:"onset"`
+	Expiry      string   `json:"expiry"`
+	Headline    string   `json:"headline"`
+	Description string   `json:"description"`
+	Regions     []string `json:"regions"`
+	Status      string   `json:"status"`
+}
+
+// LevelClass returns Level lowercased for use as a CSS class
+// (warning-yellow / warning-orange / warning-red).
+func (w Warning) LevelClass() string {
+	return strings.ToLower(w.Level)
 }

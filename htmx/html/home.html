@@ -27,11 +27,18 @@
             hx-trigger="click"
             hx-target="#national-result"
             hx-indicator="#national-spinner"
-            onclick="document.getElementById('national-selected').textContent = 'National';"
+            onclick="
+              document.getElementById('national-selected').textContent =
+                'National'
+            "
           >
             National Forecast
           </button>
-          <span id="national-spinner" class="htmx-indicator" aria-hidden="true"></span>
+          <span
+            id="national-spinner"
+            class="htmx-indicator"
+            aria-hidden="true"
+          ></span>
           <span id="national-selected" class="selected-label"></span>
         </div>
         <div id="national-result"></div>
@@ -47,7 +54,10 @@
             hx-trigger="change"
             hx-target="#regional-result"
             hx-indicator="#regional-spinner"
-            onchange="document.getElementById('regional-selected').textContent = this.options[this.selectedIndex].text;"
+            onchange="
+              document.getElementById('regional-selected').textContent =
+                this.options[this.selectedIndex].text
+            "
           >
             <option value="" disabled selected>Select a province</option>
             <option value="Connacht">Connacht</option>
@@ -55,7 +65,11 @@
             <option value="Munster">Munster</option>
             <option value="Ulster">Ulster</option>
           </select>
-          <span id="regional-spinner" class="htmx-indicator" aria-hidden="true"></span>
+          <span
+            id="regional-spinner"
+            class="htmx-indicator"
+            aria-hidden="true"
+          ></span>
           <span id="regional-selected" class="selected-label"></span>
         </div>
         <div id="regional-result"></div>
@@ -71,7 +85,10 @@
             hx-trigger="change"
             hx-target="#county-result"
             hx-indicator="#county-spinner"
-            onchange="document.getElementById('county-selected').textContent = this.options[this.selectedIndex].text;"
+            onchange="
+              document.getElementById('county-selected').textContent =
+                this.options[this.selectedIndex].text
+            "
           >
             <option value="" disabled selected>Select a county</option>
             <option value="Antrim">Antrim</option>
@@ -107,10 +124,24 @@
             <option value="Wexford">Wexford</option>
             <option value="Wicklow">Wicklow</option>
           </select>
-          <span id="county-spinner" class="htmx-indicator" aria-hidden="true"></span>
+          <span
+            id="county-spinner"
+            class="htmx-indicator"
+            aria-hidden="true"
+          ></span>
           <span id="county-selected" class="selected-label"></span>
         </div>
         <div id="county-result"></div>
+      </section>
+
+      <section class="card">
+        <h2>Weather Warnings</h2>
+        <div
+          id="warning-result"
+          hx-get="/warning"
+          hx-trigger="load, every 5m"
+          hx-swap="innerHTML"
+        ></div>
       </section>
     </div>
 

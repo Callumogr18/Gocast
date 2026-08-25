@@ -7,7 +7,7 @@ import (
 
 	"github.com/Callumogr18/Gocast/display"
 	"github.com/Callumogr18/Gocast/htmx/server"
-	weathertool "github.com/Callumogr18/Gocast/weather_tool"
+	XMLprocessing "github.com/Callumogr18/Gocast/weather_tool/XML-Processing"
 )
 
 func main() {
@@ -37,6 +37,6 @@ func main() {
 			return
 		}
 
-		weathertool.FetchXML(choice)
+		XMLprocessing.FetchXML(choice)
 	}
 }

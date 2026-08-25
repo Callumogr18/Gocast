@@ -11,3 +11,5 @@ The docs directory contains...
 
 - README-XML.md which references the query and response format the met.ie API
 - FRONTEND-OPTIONS contains plans for possibilty of frontend development, moving from a simple CLI tool
+
+![Diagram Description](http_workflow.drawio.svg)

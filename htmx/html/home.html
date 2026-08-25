@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <script
+      src="https://unpkg.com/htmx.org@1.9.10"
+      integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="/static/style.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gocast</title>
+  </head>
+  <body>
+    <div class="page">
+      <header class="page-header">
+        <h1>Gocast</h1>
+        <p>Irish weather forecasts, straight from met.ie</p>
+      </header>
+
+      <section class="card">
+        <h2>National Forecast</h2>
+        <div class="card-controls">
+          <button
+            class="btn"
+            hx-get="/national"
+            hx-trigger="click"
+            hx-target="#national-result"
+            hx-indicator="#national-spinner"
+            onclick="
+              document.getElementById('national-selected').textContent =
+                'National'
+            "
+          >
+            National Forecast
+          </button>
+          <span
+            id="national-spinner"
+            class="htmx-indicator"
+            aria-hidden="true"
+          ></span>
+          <span id="national-selected" class="selected-label"></span>
+        </div>
+        <div id="national-result"></div>
+      </section>
+
+      <section class="card">
+        <h2>Regional Forecast</h2>
+        <div class="card-controls">
+          <select
+            class="select"
+            name="province"
+            hx-get="/regional"
+            hx-trigger="change"
+            hx-target="#regional-result"
+            hx-indicator="#regional-spinner"
+            onchange="
+              document.getElementById('regional-selected').textContent =
+                this.options[this.selectedIndex].text
+            "
+          >
+            <option value="" disabled selected>Select a province</option>
+            <option value="Connacht">Connacht</option>
+            <option value="Leinster">Leinster</option>
+            <option value="Munster">Munster</option>
+            <option value="Ulster">Ulster</option>
+          </select>
+          <span
+            id="regional-spinner"
+            class="htmx-indicator"
+            aria-hidden="true"
+          ></span>
+          <span id="regional-selected" class="selected-label"></span>
+        </div>
+        <div id="regional-result"></div>
+      </section>
+
+      <section class="card">
+        <h2>County Forecast</h2>
+        <div class="card-controls">
+          <select
+            class="select"
+            name="county"
+            hx-get="/county"
+            hx-trigger="change"
+            hx-target="#county-result"
+            hx-indicator="#county-spinner"
+            onchange="
+              document.getElementById('county-selected').textContent =
+                this.options[this.selectedIndex].text
+            "
+          >
+            <option value="" disabled selected>Select a county</option>
+            <option value="Antrim">Antrim</option>
+            <option value="Armagh">Armagh</option>
+            <option value="Carlow">Carlow</option>
+            <option value="Cavan">Cavan</option>
+            <option value="Clare">Clare</option>
+            <option value="Cork">Cork</option>
+            <option value="Derry">Derry</option>
+            <option value="Donegal">Donegal</option>
+            <option value="Down">Down</option>
+            <option value="Dublin">Dublin</option>
+            <option value="Fermanagh">Fermanagh</option>
+            <option value="Galway">Galway</option>
+            <option value="Kerry">Kerry</option>
+            <option value="Kildare">Kildare</option>
+            <option value="Kilkenny">Kilkenny</option>
+            <option value="Laois">Laois</option>
+            <option value="Leitrim">Leitrim</option>
+            <option value="Limerick">Limerick</option>
+            <option value="Longford">Longford</option>
+            <option value="Louth">Louth</option>
+            <option value="Mayo">Mayo</option>
+            <option value="Meath">Meath</option>
+            <option value="Monaghan">Monaghan</option>
+            <option value="Offaly">Offaly</option>
+            <option value="Roscommon">Roscommon</option>
+            <option value="Sligo">Sligo</option>
+            <option value="Tipperary">Tipperary</option>
+            <option value="Tyrone">Tyrone</option>
+            <option value="Waterford">Waterford</option>
+            <option value="Westmeath">Westmeath</option>
+            <option value="Wexford">Wexford</option>
+            <option value="Wicklow">Wicklow</option>
+          </select>
+          <span
+            id="county-spinner"
+            class="htmx-indicator"
+            aria-hidden="true"
+          ></span>
+          <span id="county-selected" class="selected-label"></span>
+        </div>
+        <div id="county-result"></div>
+      </section>
+
+      <section class="card">
+        <h2>Weather Warnings</h2>
+        <div
+          id="warning-result"
+          hx-get="/warning"
+          hx-trigger="load, every 5m"
+          hx-swap="innerHTML"
+        ></div>
+      </section>
+    </div>
+
+    <script>
+      document.body.addEventListener("htmx:responseError", function (e) {
+        e.detail.target.innerHTML =
+          '<p role="alert">' + e.detail.xhr.responseText + "</p>";
+      });
+    </script>
+  </body>
+</html>
